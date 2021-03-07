@@ -28,6 +28,6 @@ Follow the next steps to make your life a lot easier.
   2) type in "python <path/to/repo.py> --name <repo_name> and hit enter
   3) Watch how the scripts generates a package at the cwd and a new repository on github.
 
-  ## Example ##
-  python C:/repo.py --name example_of_puclic_repo
+  ##Example ##
+  python C:/repo.py --name example_of_puclic_repo \n
   python C:/repo.py --name example_of_private_repo --private
