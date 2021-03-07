@@ -1,4 +1,4 @@
-# AUTHOR: Foebry
+# Repo
 
 This Repo package was designed to ease the manual labor of creating a new project and github repository.
 the repo.py script can handle 2 arguments, 1 of which is required.
