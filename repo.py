@@ -60,6 +60,8 @@ try:
     os.system('git add . && git commit -m "Initial commit" && git push origin master')
     # adding parent_path to pythonpath environment variable
     os.system(f"setx pythonpath='%pythonpath%;{parent_path}'")
+    os.chdir("%s/%s/scripts"%(parenpath, env))
+    os.system("activate)
     os.system("python -m pip install --upgrade pip")
 except FileExistsError as error: print(f"A folder with name {repo_name} already exists")
 except Exception as error: print(type(error), error)
