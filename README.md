@@ -29,5 +29,5 @@ Follow the next steps to make your life a lot easier.
   3) Watch how the scripts generates a package at the cwd and a new repository on github.
 
   # Example
-  1) python C:/repo.py --name example_of_puclic_repo
-  2) python C:/repo.py --name example_of_private_repo --private
+  1) python C:/repo.py --name example_of_puclic_repo --env example
+  2) python C:/repo.py --name example_of_private_repo --private --env example
