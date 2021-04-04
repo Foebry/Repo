@@ -9,15 +9,18 @@ import os
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", "-n", type=str, dest="name", required=True)
 parser.add_argument("--private", "-p", dest="is_private", action="store_true")
+parser.add_argument("--env", dest="env")
 args = parser.parse_args()
 repo_name = args.name
 is_private = args.is_private
+env = args.env
 
 url = "https://api.github.com/user/repos"
 if is_private: payload = '{"name": "' + repo_name + '", "private": true}'
 else: payload = '{"name": "' + repo_name + '", "private": false}'
-
-
+    
+if not env: env = repo_name
+    
 headers = {
     "Authorization": 'token '+GITHUB_TOKEN,
     "Accept": "application/vnd.github.v3+json"
@@ -35,7 +38,7 @@ try:
     os.system("git init")
     os.system("git remote add origin https://github.com/Foebry/" + repo_name)
     os.system("echo. > README.md")
-    os.system(f'python -m venv {repo_name}')
+    os.system(f'python -m venv {env}')
     # create .gitignore
     os.system("echo __pycache__ >> .gitignore")
     os.system("echo /Logs/* >> .gitignore")
