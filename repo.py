@@ -18,9 +18,9 @@ env = args.env
 url = "https://api.github.com/user/repos"
 if is_private: payload = '{"name": "' + repo_name + '", "private": true}'
 else: payload = '{"name": "' + repo_name + '", "private": false}'
-    
+
 if not env: env = repo_name
-    
+
 headers = {
     "Authorization": 'token '+GITHUB_TOKEN,
     "Accept": "application/vnd.github.v3+json"
@@ -61,7 +61,7 @@ try:
     # adding parent_path to pythonpath environment variable
     os.system(f"setx pythonpath='%pythonpath%;{parent_path}'")
     os.chdir("%s/%s/scripts"%(parenpath, env))
-    os.system("activate)
+    os.system("activate")
     os.system("python -m pip install --upgrade pip")
 except FileExistsError as error: print(f"A folder with name {repo_name} already exists")
 except Exception as error: print(type(error), error)
