@@ -1,67 +1,160 @@
-#!/usr/bin/env python
+import os
+import Git
+import json
+import base64
 
-from secrets import GITHUB_TOKEN
-import requests
-import argparse
+from secrets import GITHUB_PROFILE, EMAIL, NAME
+
+
+
+class Repo:
+
+    def __init__(self, namespace):
+        from Git import init, commit
+        """ Creating a brand new github repository with python package"""
+        self.private = namespace.is_private
+        self.name = namespace.name
+        self.branch = namespace.branch
+        self.env = namespace.env
+        if self.env == self.name.lower(): self.env = '_'+self.env
+
+        repo = os.path.join(os.getcwd(), self.name)
+        package = os.path.join(repo, self.name.lower())
+
+        # create local folder package inside repo
+        os.system("mkdir %s" %package)
+        os.chdir(repo)
+
+        # initialize github repository
+        init(self.name, self.private)
+
+        # initialize package
+        os.chdir(package)
+        self.initPackage()
+
+        # initialize local repo
+        os.chdir(repo)
+        self.initLocalRepo()
+
+        self.createVirtualEnvironment()
+
+        # commit changes and push to Github
+        os.chdir(repo)
+        commit()
+
+
+
+    def createVirtualEnvironment(self):
+        import os
+        print("creating venv %s" %self.env)
+        os.system("python -m venv %s" %self.env)
+        env_path = os.path.join(os.getcwd(),'%s','scripts') %self.env
+        os.chdir(env_path)
+        os.system("activate")
+        os.system("python -m pip install --upgrade pip")
+        os.system("deactivate")
+
+
+
+    def initPackage(self):
+        os.system("cd .> __init__.py")
+        os.system("cd .> main.py")
+        self.createVersion()
+
+
+    def createVersion(self):
+        from datetime import datetime as dt
+        from Git import chooseLicense
+        from secrets import NAME, EMAIL, GITHUB_PROFILE
+
+        license = chooseLicense()
+        description = input("Give a short description of your package's purpose: \n")
+        url = input("Any website for you package? if No press enter\n")
+
+        content =\
+"""
+__title__ = '%s'
+__description__ = '%s'
+__url__ = '%s'
+__version__ = '0.0.1'
+__author__ = '%s'
+__author_email__ = '%s'
+__license__ = '%s'
+__copyright__ = 'Copyright %s %s'
+""" %(self.name.lower(), description, url, GITHUB_PROFILE, EMAIL, license, dt.now().year, NAME)
+
+        file = open("__version__.py", 'w')
+        file.write(content)
+        file.close
+
+
+
+    def initLocalRepo(self):
+        from Git import ignore
+        # create README.md
+        README = input("Write your README.md file here. Press enter if you want to do it later.:\n")
+        if README == "":
+            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
+            if confirmation not in ["", "y"]: self.initLocalRepo()
+
+        os.system("cd . > config.py")
+        os.system("cd .> config_ex.py")
+        file = open("README.md", "w")
+        file.write(README)
+        file.close()
+
+        self.setup()
+        ignore()
+
+
+
+    def setup(self):
+        import os
+        from secrets import GITHUB_PROFILE
+
+        SETUP = \
+"""
 import os
 
+from codecs import open
+from setuptools import setup
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--name", "-n", type=str, dest="name", required=True)
-parser.add_argument("--private", "-p", dest="is_private", action="store_true")
-parser.add_argument("--env", dest="env")
-args = parser.parse_args()
-repo_name = args.name
-is_private = args.is_private
-env = args.env
+here = os.path.abspath(os.path.dirname(__file__))
 
-url = "https://api.github.com/user/repos"
-if is_private: payload = '{"name": "' + repo_name + '", "private": true}'
-else: payload = '{"name": "' + repo_name + '", "private": false}'
+packages = ['%s']
 
-if not env: env = repo_name
+requires = []
 
-headers = {
-    "Authorization": 'token '+GITHUB_TOKEN,
-    "Accept": "application/vnd.github.v3+json"
-}
+about = {}
+with open(os.path.join(here, '%s', '__version__.py'), 'r', 'utf-8') as f:
+    exec(f.read(), about)
 
+with open('README.md', 'r', 'utf-8') as f:
+    readme = f.read()
 
-response = requests.post(url, data=payload, headers=headers)
+setup(
+    name=about['__title__'],
+    version=about['__version__'],
+    description=about['__description__'],
+    long_description=readme,
+    long_description_content_type='text/markdown',
+    author=about['__author__'],
+    author_email=about['__author_email__'],
+    url=about['__url__'],
+    packages=packages,
+    package_data={'': ['LICENSE', 'NOTICE']},
+    package_dir={'%s': '%s'},
+    include_package_data=True,
+    install_requires=requires,
+    license=about['__license__'],
+    project_urls={
+        'Source': 'https://github.com/%s/%s',
+    },
+)
+""" %(self.name.lower(), self.name.lower(), self.name.lower(), self.name.lower(), GITHUB_PROFILE, self.name)
 
-try:
-    REPO_PATH = os.getcwd()
-    os.chdir(REPO_PATH)
-    os.system("mkdir " + repo_name)
-    parent_path = f'{REPO_PATH}/{repo_name}'
-    os.chdir(f'{parent_path}')
-    os.system("git init")
-    os.system("git remote add origin https://github.com/Foebry/" + repo_name)
-    os.system("echo. > README.md")
-    os.system(f'python -m venv {env}')
-    # create .gitignore
-    os.system("echo __pycache__ >> .gitignore")
-    os.system("echo /Logs/* >> .gitignore")
-    os.system("echo *.log >> .gitignore")
-    # create setup.py
-    os.system("echo from setuptools import setup >> setup.py")
-    os.system("echo setup( >> setup.py")
-    os.system(f"echo     name = '{repo_name}', >> setup.py")
-    os.system("echo     version = 0.1, >> setup.py")
-    os.system("echo     packages = [], >> setup.py")
-    os.system(f"echo     url = 'https://github.com/Foebry/{repo_name}', >> setup.py")
-    os.system("echo     author = 'Foebry', >> setup.py")
-    os.system("echo     author_email = 'rain_fabry@hotmail.com', >> setup.py")
-    os.system("echo     description = '' >> setup.py")
-    os.system("echo ) >> setup.py")
-    # setting git settings
-    os.system('git config --global user.email "rain_fabry@hotmail.com"')
-    os.system('git config --global user.name "Foebry"')
-    os.system('git add . && git commit -m "Initial commit" && git push origin master')
-    # adding parent_path to pythonpath environment variable
-    os.system(f"setx pythonpath='%pythonpath%;{parent_path}'")
-    os.chdir("%s/%s/scripts"%(parent_path, env))
-    os.system("activate")
-    os.system("python -m pip install --upgrade pip")
-except FileExistsError as error: print(f"A folder with name {repo_name} already exists")
-except Exception as error: print(type(error), error)
+        file = open("setup.py", "w")
+        file.write(SETUP)
+        file.close()
+
+        os.system("cd .> setup.cfg")
