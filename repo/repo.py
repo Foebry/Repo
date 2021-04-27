@@ -141,7 +141,7 @@ setup(
         file.write(SETUP)
         file.close()
 
-        os.system("cd .> changelog.txt")
+        os.system("cd .> changelog.log")
 
 
 
