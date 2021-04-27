@@ -1,13 +1,11 @@
 import os
 import Git
-import json
-import base64
 
 from secrets import GITHUB_PROFILE, EMAIL, NAME
 
 
 
-class Repo:
+class Python:
 
     def __init__(self, namespace):
         from Git import init, commit
@@ -36,23 +34,9 @@ class Repo:
         os.chdir(repo)
         self.initLocalRepo()
 
-        self.createVirtualEnvironment()
-
         # commit changes and push to Github
         os.chdir(repo)
         commit()
-
-
-
-    def createVirtualEnvironment(self):
-        import os
-        print("creating venv %s" %self.env)
-        os.system("python -m venv %s" %self.env)
-        env_path = os.path.join(os.getcwd(),'%s','scripts') %self.env
-        os.chdir(env_path)
-        os.system("activate")
-        os.system("python -m pip install --upgrade pip")
-        os.system("deactivate")
 
 
 
@@ -157,4 +141,24 @@ setup(
         file.write(SETUP)
         file.close()
 
-        os.system("cd .> setup.cfg")
+        os.system("cd .> changelog.txt")
+
+
+
+class JavaScript:
+    pass
+
+
+
+class Cflat:
+    pass
+
+
+
+class Csharp:
+    pass
+
+
+
+class Cplusplus:
+    pass
