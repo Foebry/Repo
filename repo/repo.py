@@ -2,54 +2,62 @@ import os
 import Git
 
 from secrets import GITHUB_PROFILE, EMAIL, NAME
+from Git import init, commit, ignore, chooseLicense
+from datetime import datetime as dt
 
 
 
-class Python:
+class MainClass():
 
     def __init__(self, namespace):
-        from Git import init, commit
-        """ Creating a brand new github repository with python package"""
+
         self.private = namespace.is_private
         self.name = namespace.name
         self.branch = namespace.branch
-        self.env = namespace.env
-        if self.env == self.name.lower(): self.env = '_'+self.env
+        self.repo = os.path.join(os.getcwd(), self.name)
+        self.package = os.path.join(self.repo, self.name.lower())
 
-        repo = os.path.join(os.getcwd(), self.name)
-        package = os.path.join(repo, self.name.lower())
+        os.system("mkdir {}".format(self.package))
+        os.chdir(self.repo)
+        init(self.package, self.name, self.private)
 
-        # create local folder package inside repo
-        os.system("mkdir %s" %package)
-        os.chdir(repo)
 
-        # initialize github repository
-        init(self.name, self.private)
+    def initPackage(self, ext):
+        os.system("cd .> __init__.{}".format(ext))
+        os.system("cd .> main.{}".format(ext))
+        self.createVersion()
+        os.chdir(self.repo)
 
-        # initialize package
-        os.chdir(package)
-        self.initPackage()
 
-        # initialize local repo
-        os.chdir(repo)
-        self.initLocalRepo()
+    def initLocalRepo(self, ext):
+        # create README.md
+        README = input("Write your README.md file here. Press enter if you want to do it later.:\n")
+        if README == "":
+            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
+            if confirmation not in ["", "y"]: self.initLocalRepo()
 
-        # commit changes and push to Github
-        os.chdir(repo)
+        os.system("cd . > config.{}".format(ext))
+        os.system("cd .> config_ex.{}".format(ext))
+        file = open("README.md", "w")
+        file.write(README)
+        file.close()
+
+        self.setup()
+        ignore()
+        os.chdir(self.repo)
+
+
+
+class Python(MainClass):
+
+    def __init__(self, namespace):
+        super().__init__(namespace)
+        self.initPackage('py')
+        self.initLocalRepo('py')
         commit()
 
 
-
-    def initPackage(self):
-        os.system("cd .> __init__.py")
-        os.system("cd .> main.py")
-        self.createVersion()
-
-
     def createVersion(self):
-        from datetime import datetime as dt
-        from Git import chooseLicense
-        from secrets import NAME, EMAIL, GITHUB_PROFILE
 
         license = chooseLicense()
         description = input("Give a short description of your package's purpose: \n")
@@ -70,25 +78,6 @@ __copyright__ = 'Copyright %s %s'
         file = open("__version__.py", 'w')
         file.write(content)
         file.close
-
-
-
-    def initLocalRepo(self):
-        from Git import ignore
-        # create README.md
-        README = input("Write your README.md file here. Press enter if you want to do it later.:\n")
-        if README == "":
-            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
-            if confirmation not in ["", "y"]: self.initLocalRepo()
-
-        os.system("cd . > config.py")
-        os.system("cd .> config_ex.py")
-        file = open("README.md", "w")
-        file.write(README)
-        file.close()
-
-        self.setup()
-        ignore()
 
 
 
@@ -145,20 +134,49 @@ setup(
 
 
 
-class JavaScript:
-    pass
+class Dart(MainClass):
+
+    def __init__(self, namespace):
+        super.__init__(namespace)
+        self.initPackage('dart')
+        self.initLocalRepo('dart')
+        commit()
+
+
+class JavaScript(MainClass):
+
+    def __init__(self, namespace):
+        super.__init__(namespace)
+        self.initPackage('js')
+        self.initLocalRepo('js')
+        commit()
 
 
 
-class Cflat:
-    pass
+class C(MainClass):
+
+    def __init__(self, namespace):
+        super.__init__(namespace)
+        self.initPackage('c')
+        self.initLocalRepo('c')
+        commit()
 
 
 
-class Csharp:
-    pass
+class Cs(MainClass):
+
+    def __init__(self, namespace):
+        super.__init__(namespace)
+        self.initPackage('cs')
+        self.initLocalRepo('cs')
+        commit()
 
 
 
-class Cplusplus:
-    pass
+class Cpp(MainClass):
+
+    def __init__(self, namespace):
+        super.__init__(namespace)
+        self.initPackage('cpp')
+        self.initLocalRepo('cpp')
+        commit()

@@ -1,4 +1,4 @@
-def init(repo, is_private):
+def init(package, repo, is_private):
     from secrets import GITHUB_PROFILE, GITHUB_TOKEN, EMAIL
     import os
     import requests
@@ -20,6 +20,7 @@ def init(repo, is_private):
     os.system("git remote add origin https://github.com/%s/%s" %(profile, repo))
     os.system("git config --global user.email %s" %EMAIL)
     os.system("git config --global user.name %s" %profile)
+    os.chdir(package)
 
 
 def ignore():

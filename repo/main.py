@@ -33,3 +33,8 @@ if args.language == "py":
     from repo import Python
     Python(args)
     quit()
+
+elif args.language == "dart":
+    from repo import Dart
+    Dart(args)
+    quit()
