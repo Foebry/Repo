@@ -8,7 +8,7 @@ Make sure the new project name is not present as a github repository already, if
 For the repo.py script to run you will need Python installed on your machine and have a github account.
 Follow the next steps to make your life a lot easier.
 
-##STEP 1: Create GITHUB_TOKEN##
+##STEP 1: Create GITHUB_TOKEN
   1) Create a github-account
   2) Navigate to github.com/settings/profile
   3) click "Developer settings" button
@@ -18,17 +18,17 @@ Follow the next steps to make your life a lot easier.
   7) click Generate token
   8) Copy your generated token
 
-##STEP 2: Setup secret ##
-  1) change the extension of the secrets.txt file into a .py extention
+##STEP 2: Setup config 
+  1) change the config_ex.json file into config.json
   2) paste your generated token in the "YOUR_GITHUB_TOKEN" placeholder
-  3) save the secrets.py file
+  3) save the file
 
-##STEP 3: Start creating repositories ##
+##STEP 3: Start creating repositories
   1) open cmd in windows or terminal in OS
-  2) type in "python <path/to/repo.py> --name <repo_name> and hit enter
+  2) type in "py <path/to/repo/main.py> --name <repo_name> and hit enter
   3) Watch how the scripts generates a package at the cwd and a new repository on github.
 
-  # Example
-  1) python C:/repo.py --name example_of_puclic_repo
-  2) python C:/repo.py --name example_of_private_repo --private
-  3) python C:/repo.py --name example_with_var_env --env example
+  # Examples
+  1) python C:/repo/main.py --name example_of_puclic_repo
+  2) python C:/repo/main.py --name example_of_private_repo --private
+  3) python C:/repo/main.py --name example_with_var_env --env example
