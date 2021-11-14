@@ -31,4 +31,3 @@ To get started select the branch you desire. Branches are named to scripting lan
   1) python C:/repo/main.py --name example_of_puclic_repo
   2) python C:/repo/main.py --name example_of_private_repo --private
   3) python C:/repo/main.py --name example_with_var_env --env example
->>>>>>> 8a5b24f366cc87c4f6617e1d3bd2087964853047
