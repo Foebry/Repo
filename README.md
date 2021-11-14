@@ -4,7 +4,7 @@ This Repo package was designed to ease the manual labor of creating a new projec
 
 For the repo.py script to run you will need Python installed on your machine and have a github account. Follow the next steps to make your life a lot easier.
 
-<<<<<<< HEAD
+
 To get started select the branch you desire. Branches are named to scripting languages
 =======
 ##STEP 1: Create GITHUB_TOKEN
