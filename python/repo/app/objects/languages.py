@@ -29,7 +29,7 @@ class Python(MainClass):
         super().__init__(app, namespace)
         self.repo.createSetup(app)
         self.package = Package(self.repo, app, self.git)
-        commit(self.repo)
+        self.git.commit(self.repo)
         self.devBranch()
 
 
