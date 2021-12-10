@@ -1,5 +1,6 @@
 import os
 import easygui
+import json
 
 
 class Repository:
@@ -69,13 +70,30 @@ setup(
         os.chdir(os.path.join(self.path, "css"))
         os.system("cd .> style.scss")
         os.system("mkdir base")
-        if new_basefolder or app.basefolder in (
-            "FULL_PATH_TO_YOUR_STANDARD_BASE_FOLDER_CSS",
-            "",
+        ref_base = app.basefolder
+        if new_basefolder or (
+            app.basefolder in ("FULL_PATH_TO_YOUR_STANDARD_BASE_FOLDER_CSS", "")
         ):
             ref_base = self.createBaseFolder(app)
         target = os.path.join(self.path, "css", "base")
+        if not os.path.isdir(ref_base):
+            print(
+                "The location of your base folder in the config file does not exist..."
+            )
+            ref_base = self.findBaseFolder(app)
+        ref_base = ref_base.replace("//", "\\")
         os.system(f"xcopy {ref_base} {target} /E")
+
+    def findBaseFolder(self, app):
+        print(
+            "Please select the correct location of your base folder, cancel to create a new base folder"
+        )
+        folder = easygui.diropenbox()
+        if folder is None:
+            print("No base folder selected, creating new base folder")
+            return self.createBaseFolder(app)
+        self.saveBaseFolder(app, folder)
+        return folder
 
     def createBaseFolder(self, app):
         print(
@@ -91,15 +109,24 @@ setup(
         os.system("cd .> _fonts.scss")
         os.system("cd .> _mixins.scss")
         os.system("cd .> _variables.scss")
-        open_file = open(os.path.join(app.root, "config.json"), "r")
-        lines = open_file.readlines()
-        open_file.close()
-        with open(os.path.join(app.root, "config.json"), "w") as config:
-            for line in lines:
-                if "WEB_BASE_FOLDER" in line:
-                    line = f'"WEB_BASE_FOLDER": "{new_folder}",'
-                config.write(line)
+        self.saveBaseFolder(app, new_folder)
         return new_folder
+
+    def saveBaseFolder(self, app, new_folder):
+        new_folder = new_folder.replace("\\", "//")
+        with open(os.path.join(app.root, "config.json"), "r") as file:
+            lines = file.readlines()
+        new_lines = []
+        for line in lines:
+            if "WEB_BASE_FOLDER" in line:
+                pos = line.find(":")
+                line = line.replace(line[pos:], f':"{new_folder}",')
+            new_lines.append(line)
+        text = "".join(new_lines)
+
+        with open(os.path.join(app.root, "config.json"), "w") as file:
+            config = json.loads(text)
+            json.dump(config, file, indent=4)
 
     def initPHP(self):
         """ """

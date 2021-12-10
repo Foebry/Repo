@@ -52,7 +52,7 @@ try:
         print("For help type repo.py -h\n\n")
 
     args = parser.parse_args()
-    with open(os.path.join(this, "config.json")) as file:
+    with open(os.path.join(this, "./config.json")) as file:
         data = json.load(file)
         app = App(data, this)
 
