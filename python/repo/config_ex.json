@@ -6,6 +6,7 @@
   "APP":{
     "security": "basic",
     "endpoint": "https://api.github.com",
+    "WEB_BASE_FOLDER": "FULL_PATH_TO_YOUR_STANDARD_BASE_FOLDER_CSS",
   	"CREDENTIALS":{
       "GITHUB_TOKEN":"YOUR_GITHUB_TOKEN",
       "GITHUB_PROFILE":"YOUR_GITHUB_PROFILE_NAME"
