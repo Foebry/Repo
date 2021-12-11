@@ -30,7 +30,7 @@ Follow the next steps to make your life a lot easier.
 ### Setup with pip
 
 ```
-pip install git+https://github.com/Foebry/repo.git
+pip install git+https://github.com/Foebry/repo/python.git
 ```
 -   in 3.5 you should use "path_to_python_folder//Lib//site-packages//repo"
 
