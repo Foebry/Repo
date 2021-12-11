@@ -22,10 +22,7 @@ class Git:
         }
 
         os.system("git init")
-        os.system(
-            "git remote add origin https://github.com/%s/%s.git"
-            % (app.profile, namespace.name)
-        )
+        os.system("git remote add origin https://github.com/%s/%s.git" % (app.profile, namespace.name))
         os.system("git branch -M main")
 
         self.setup(repo)
@@ -40,29 +37,27 @@ class Git:
         if "license" not in self.data:
             self.data["license"] = chooseLicense()
         if "description" not in self.data:
-            self.data["description"] = input(
-                "Give a short description of your package's purpose: \n"
-            )
+            self.data["description"] = input("Give a short description of your package's purpose: \n")
 
         # create README.md
         README = input("Write your README.md now? (y/n): ")
-<<<<<<< HEAD
-        if README in("", "n"):
-            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
-            if confirmation not in ["", "y"]: self.setup(repo)
-=======
+
         if README in ("", "n"):
-            confirmation = input(
-                "Are you sure you want to write your README file later? (y/n): "
-            )
+            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
+            if confirmation not in ["", "y"]:
+                self.setup(repo)
+
+        if README in ("", "n"):
+            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
             if confirmation not in ["", "y"]:
                 self.setup()
->>>>>>> python
+
             README = "# {}".format(repo.name.capitalize())
 
             with open("README.md", "a+"):
                 no_content = file.read() == ("" or "\n")
-                if no_content: file.write(README)
+                if no_content:
+                    file.write(README)
 
         elif README == "y":
             readme_id = None
@@ -77,18 +72,17 @@ class Git:
                         os.startfile(os.path.join("README.md"))
 
                         # get id and process for our readme.md
-                        readme_id, proc = [[proc.pid, proc] for proc in psutil.process_iter() if proc.name() == "notepad.exe" and proc.pid not in notepads][0]
+                        readme_id, proc = [
+                            [proc.pid, proc]
+                            for proc in psutil.process_iter()
+                            if proc.name() == "notepad.exe" and proc.pid not in notepads
+                        ][0]
 
                 done = input("Done creating README.md file? (y/n): ")
 
-<<<<<<< HEAD
             if readme_id in [proc.pid for proc in psutil.process_iter() if proc.name() == "notepad.exe"]:
                 proc.kill()
 
-
-
-=======
->>>>>>> python
     def ignore(self):
         """
         create .gitignore
