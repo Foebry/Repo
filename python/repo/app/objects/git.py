@@ -41,12 +41,10 @@ class Git:
 
         # create README.md
         README = input("Write your README.md now? (y/n): ")
-
         if README in ("", "n"):
             confirmation = input("Are you sure you want to write your README file later? (y/n): ")
             if confirmation not in ["", "y"]:
                 self.setup(repo)
-
             README = "# {}".format(repo.name.capitalize())
 
             with open("README.md", "a+"):
