@@ -47,11 +47,6 @@ class Git:
             if confirmation not in ["", "y"]:
                 self.setup(repo)
 
-        if README in ("", "n"):
-            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
-            if confirmation not in ["", "y"]:
-                self.setup()
-
             README = "# {}".format(repo.name.capitalize())
 
             with open("README.md", "a+"):
