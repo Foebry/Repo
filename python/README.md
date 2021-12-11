@@ -80,5 +80,5 @@ For help open the command prompt or terminal and type repo.py --help
 
 # Examples
 
-1. repo.py --name example_of_puclic_repo --lan py -> creates a public project called example_of_public_repo with main language using python
-2. repo.py --name example_of_private_repo --lan php --private -> creates a private project called example_of_private_repo with main language using php
+  ```repo.py --name example_of_puclic_repo --lan py``` -> creates a public project called example_of_public_repo with main language using python
+  ```repo.py --name example_of_private_repo --lan php --private``` -> creates a private project called example_of_private_repo with main language using php
