@@ -75,10 +75,20 @@ pip install git+https://github.com/Foebry/repo.git
 6. The repository will be created with a branch called main and another branch called develop.
 
 # Help
-
-For help open the command prompt or terminal and type repo.py --help
+  
+```
+repo.py --help
+```
 
 # Examples
+  create a public python repository called test1 
 
-  ```repo.py --name example_of_puclic_repo --lan py``` -> creates a public project called example_of_public_repo with main language using python
-  ```repo.py --name example_of_private_repo --lan php --private``` -> creates a private project called example_of_private_repo with main language using php
+```
+repo.py --name test1 --lan py
+```
+  
+  create a private php repository called test2
+  
+```
+repo.py --name test2 --lan php --private
+```
