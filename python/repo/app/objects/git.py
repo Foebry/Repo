@@ -21,10 +21,7 @@ class Git:
         }
 
         os.system("git init")
-        os.system(
-            "git remote add origin https://github.com/%s/%s.git"
-            % (app.profile, namespace.name)
-        )
+        os.system("git remote add origin https://github.com/%s/%s.git" % (app.profile, namespace.name))
         os.system("git branch -M main")
 
         self.setup(repo)
@@ -39,16 +36,12 @@ class Git:
         if "license" not in self.data:
             self.data["license"] = chooseLicense()
         if "description" not in self.data:
-            self.data["description"] = input(
-                "Give a short description of your package's purpose: \n"
-            )
+            self.data["description"] = input("Give a short description of your package's purpose: \n")
 
         # create README.md
         README = input("Write your README.md now? (y/n): ")
         if README in ("", "n"):
-            confirmation = input(
-                "Are you sure you want to write your README file later? (y/n): "
-            )
+            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
             if confirmation not in ["", "y"]:
                 self.setup()
             README = "# {}".format(repo.name.capitalize())
