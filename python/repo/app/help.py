@@ -1,6 +1,8 @@
+from termcolor import colored
+
+
 def help():
-    print(
-        """\
+    return """
         The correct use of this script is: repo.py --name 'your_project_name' --lan 'your_main_project_language'
         You can add an extra flag --private if you want to create your repository as private.
 
@@ -104,4 +106,40 @@ def help():
                 |- index.html
 
         """
-    )
+
+
+def helpSection(begin, end):
+    text = help()
+
+    start = text.find(begin)
+    stop = text[start + len(begin) :].find(end)
+
+    if stop == -1:
+        stop = len(text)
+
+    return text[start:stop]
+
+
+def helpSpecificLicense(app, string, licenses):
+    license = string[string.find("-") + 1 :]
+
+    if int(license) > len(licenses) - 1:
+        print(f"invalid license, a license with number {license} does not exist")
+        return False
+
+    license_key = app.api.getLicenses()[int(license)][int(license)]
+    data = app.api.getLicense(license_key)
+    print(len(data["permissions"]), len(data["limitations"]))
+    print(f"{data['description']}")
+    print(f"below is a list of the permissions and limitations in regard {data['name']}\n")
+
+    for i in range(max(len(data["limitations"]), len(data["permissions"]))):
+        perm = ""
+        lim = ""
+        if i < len(data["limitations"]):
+            lim = data["limitations"][i]
+        if i < len(data["permissions"]):
+            perm = data["permissions"][i]
+        print(f"{' '*5}{colored('+', 'green')} {perm}{' '*(25-7-len(perm))}{colored('-', 'red')} {lim}")
+
+    print("\n")
