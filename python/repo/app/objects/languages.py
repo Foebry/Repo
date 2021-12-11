@@ -1,7 +1,6 @@
 import os
 
 from app.objects.git import Git
-from app.objects.licences import chooseLicense
 from app.objects.repositories import Repository
 from app.objects.packages import Package
 

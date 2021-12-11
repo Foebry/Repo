@@ -1,66 +1,80 @@
-def chooseLicense():
-    licenses = {
-        1: 'Apache license 2.0',
-        2: 'GNU General Public license v3.0',
-        3: 'MIT license',
-        4: 'BSD 2-Clause "Simplified" license',
-        5: 'BSD 3-Clause "New" or "Revised" license',
-        6: 'Boost Software license 1.0',
-        7: 'Creative Commons Zero v1.0 Universal license',
-        8: 'Eclipse Public license 2.0',
-        9: 'GNU Affero General Public license v3.0',
-        10: 'GNU General Public Licenc v2.0',
-        11: 'GNU Lesser Public license v2.1',
-        12: 'Mozilla Public license 2.0',
-        13: 'The Unlicense'
-    }
+from app.help import helpSpecificLicense
 
-    options = [licenses[key] for key in licenses]
-    options.append('')
-    show_options = str(licenses).replace(",", "\n").replace("{", " ").strip('}')
+
+def chooseLicense(app):
+    licenses = app.api.getLicenses()
 
     license = input("Choose a license (type help for a list of licences): \n")
     try:
-        if license in licenses.values() or license == "": return confirmLicense(show_options, license, licenses)
-        elif license == "help": helpLicense(show_options, licenses)
-        elif int(license) in licenses.keys(): return confirmLicense(show_options, licenses[int(license)], licenses)
-        elif int(license) == 0: return confirmLicense(show_options, "", licenses)
-    except ValueError: invalidLicense(show_options, licenses)
-
-    if license is None: license = " "
-
-    return license
+        if license == "help":
+            return helpLicense(licenses, app)
+        elif license == "" or (int(license) >= 0 and int(license) <= len(licenses)):
+            return confirmLicense(license, licenses, app)
+    except ValueError:
+        return invalidLicense(licenses, app)
 
 
-def confirmLicense(show_options, license, licenses):
+def confirmLicense(license, licenses, app):
     if license == "":
         confirmation = input("You are about to create your repository without a license, are you sure? (y/n): ")
-        if confirmation == "y": return license
-        elif confirmation == "n": chooseLicense()
-        else: confirmLicense(show_options, license, licenses)
+        if confirmation == "y":
+            return -1
+        elif confirmation == "n":
+            return chooseLicense(app)
+        else:
+            return confirmLicense(license, licenses, app)
 
-    elif license == "help": helpLicense(show_options, licenses)
+    elif license == "help":
+        return helpLicense(licenses, app)
 
     else:
-        confirmation = input("you are about to create your repository with the '%s' license, are you sure? (y/n): " %license)
-        if confirmation == "y": return license
-        elif confirmation == "n": chooseLicense()
-        else: confirmLicense(show_options, license, licenses)
+        confirmation = input(
+            "you are about to create your repository with the '%s' license, are you sure? (y/n): "
+            % licenses[int(license)]["name"]
+        ).lower()
+        if confirmation == "y":
+            return int(license)
+        elif confirmation == "n":
+            return chooseLicense(app)
+        else:
+            return confirmLicense(license, licenses, app)
 
 
-def helpLicense(show_options, licenses):
-    print("Please choose a number from the following list, corresponding to your desired license. If you dont want a license press 0")
-    try: key = int(input("%s \n" %show_options))
-    except ValueError: key = " "
-    if key in licenses.keys():
-        confirmLicense(show_options, licenses[key], licenses)
-    elif key == 0:
-        confirmLicense(show_options, "", licenses)
-    else: invalidLicense(show_options, licenses)
+def helpLicense(licenses, app):
+    print("--------------------------------------------------------------------------------")
+    for license in licenses:
+        print(f"{licenses.index(license)}: {license['name']}")
+    print(
+        """
+-----------------------------------------------------------------------------------------
+Please choose a number from the following list, corresponding to your desired license.
+If you dont want a license press enter.
+If you need more help type help-{number} for extra info on a specific license.\n"""
+    )
+    key = input()
+    if "help" in key:
+        if helpSpecificLicense(app, key, licenses) == False:
+            return helpLicense(licenses, app)
+
+    elif key == "":
+        return confirmLicense(key, licenses, app)
+
+    try:
+        key = int(key)
+        if key > len(licenses) - 1:
+            return helpLicense(licenses, app)
+        elif 0 <= key <= len(licenses) - 1:
+            return confirmLicense(key, licenses, app)
+    except ValueError:
+        print("please select a license from the list")
+        return chooseLicense(app)
 
 
-def invalidLicense(show_options, licenses):
+def invalidLicense(licenses, app):
     option = input("Invalid input. To view a list of all valid licenses type help \n")
-    if option == "help": helpLicense(show_options, licenses)
-    elif option in licenses.values(): confirmLicense(show_options, option, licenses)
-    else: invalidLicense(show_options, licenses)
+    if option == "help":
+        return helpLicense(licenses, app)
+    elif option in range(len(licenses)):
+        return confirmLicense(option, licenses, app)
+    else:
+        return invalidLicense(licenses, app)

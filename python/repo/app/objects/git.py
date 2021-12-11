@@ -25,26 +25,30 @@ class Git:
         os.system("git remote add origin https://github.com/%s/%s.git" % (app.profile, namespace.name))
         os.system("git branch -M main")
 
-        self.setup(repo)
-
-        # app.api.postRepository(self.data)
+        self.setup(repo, app)
+        self.data["license"] = ""
+        app.api.postRepository(self.data)
 
         self.ignore()
 
-    def setup(self, repo):
+    def setup(self, repo, app):
         """ """
 
         if "license" not in self.data:
-            self.data["license"] = chooseLicense()
+            licenses = app.api.getLicenses()
+            self.data["license"] = chooseLicense(app)
+            if self.data["license"] > -1:
+                repo.createLicense(app, self.data["license"])
+
         if "description" not in self.data:
             self.data["description"] = input("Give a short description of your package's purpose: \n")
 
         # create README.md
-        README = input("Write your README.md now? (y/n): ")
+        README = input("Write your README.md now? (y/n): ").lower()
         if README in ("", "n"):
-            confirmation = input("Are you sure you want to write your README file later? (y/n): ")
+            confirmation = input("Are you sure you want to write your README file later? (y/n): ").lower()
             if confirmation not in ["", "y"]:
-                self.setup()
+                return self.setup()
             README = "# {}".format(repo.name.capitalize())
 
             with open("README.md", "a") as file:
@@ -55,7 +59,10 @@ class Git:
             while done != "y":
                 with open("README.md", "a+") as file:
                     os.startfile(os.path.join("README.md"))
-                done = input("Done creating README.md file? (y/n): ")
+                done = input("Done creating README.md file? (y/n): ").lower()
+
+        else:
+            return self.setup(repo)
 
     def ignore(self):
         """
