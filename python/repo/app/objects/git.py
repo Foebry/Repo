@@ -57,9 +57,6 @@ class Git:
                     os.startfile(os.path.join("README.md"))
                 done = input("Done creating README.md file? (y/n): ")
 
-            if readme_id in [proc.pid for proc in psutil.process_iter() if proc.name() == "notepad.exe"]:
-                proc.kill()
-
     def ignore(self):
         """
         create .gitignore
