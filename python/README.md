@@ -29,8 +29,9 @@ Follow the next steps to make your life a lot easier.
 
 ### Setup with pip
 
--   open cmd in windows
--   type pip install git+https://github.com/Foebry/repo.git
+'''
+pip install git+https://github.com/Foebry/repo.git
+'''
 -   in 3.5 you should use "path_to_python_folder//Lib//site-packages//repo"
 
 ## Setup with download
