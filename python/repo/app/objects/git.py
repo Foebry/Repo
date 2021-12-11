@@ -44,33 +44,17 @@ class Git:
         if README in ("", "n"):
             confirmation = input("Are you sure you want to write your README file later? (y/n): ")
             if confirmation not in ["", "y"]:
-                self.setup(repo)
+                self.setup()
             README = "# {}".format(repo.name.capitalize())
 
-            with open("README.md", "a+"):
-                no_content = file.read() == ("" or "\n")
-                if no_content:
-                    file.write(README)
+            with open("README.md", "a") as file:
+                file.write(README)
 
         elif README == "y":
-            readme_id = None
             done = False
             while done != "y":
                 with open("README.md", "a+") as file:
-                    # get all process_ids for all open notepads
-                    notepads = [proc.pid for proc in psutil.process_iter() if proc.name() == "notepad.exe"]
-
-                    # open new notepad window if our readme.md is not open (yet)
-                    if not done and readme_id not in notepads:
-                        os.startfile(os.path.join("README.md"))
-
-                        # get id and process for our readme.md
-                        readme_id, proc = [
-                            [proc.pid, proc]
-                            for proc in psutil.process_iter()
-                            if proc.name() == "notepad.exe" and proc.pid not in notepads
-                        ][0]
-
+                    os.startfile(os.path.join("README.md"))
                 done = input("Done creating README.md file? (y/n): ")
 
             if readme_id in [proc.pid for proc in psutil.process_iter() if proc.name() == "notepad.exe"]:
