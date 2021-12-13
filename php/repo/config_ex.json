@@ -1,0 +1,14 @@
+{
+  "INFO":{
+    "EMAIL": "example@example.ex",
+    "NAME": "Unknown"
+  },
+  "APP":{
+    "security": "basic",
+    "endpoint": "https://api.github.com",
+  	"CREDENTIALS":{
+      "GITHUB_TOKEN":"YOUR_GITHUB_TOKEN",
+      "GITHUB_PROFILE":"YOUR_GITHUB_PROFILE_NAME"
+    }
+  }
+}
